@@ -1,0 +1,17 @@
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    # Runs every 4 hours to prevent Streamlit Community Cloud from sleeping
+    - cron: '0 */4 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  ping-app:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit URL
+        run: |
+          echo "Pinging https://voice-tts.streamlit.app/..."
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 30 "https://voice-tts.streamlit.app/")
+          echo "Response code: $HTTP_STATUS at $(date -u)"
